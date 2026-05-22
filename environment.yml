@@ -1,0 +1,24 @@
+name: sequentialdataval
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - numpy>=1.25.0
+  - pandas>=1.5.0
+  - scikit-learn>=1.2.0
+  - scipy>=1.10.0
+  - matplotlib>=3.7.0
+  - seaborn>=0.12.0
+  - tqdm>=4.60.0
+  - pyyaml>=6.0
+  - pytorch>=2.0.0
+  - torchvision>=0.15.0
+  - pip
+  - pip:
+    - opendataval>=1.3.0
+    # Optional: uncomment as needed
+    # - cvxpy>=1.4.0
+    # - sentence-transformers>=2.2.0
+    # - transformers>=4.35.0

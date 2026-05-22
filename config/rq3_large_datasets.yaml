@@ -1,0 +1,19 @@
+experiment:
+  # Paper RQ3 (digits & bbc-embeddings)
+  train_count: 100
+  valid_count: 100
+  test_count: 1000
+  noise_rate: 0.0
+  device: "cpu"
+
+model:
+  name: "sklogreg"
+
+noise:
+  type: "gaussian"
+  kwargs:
+    noise_rate: 0.0
+
+output:
+  base_dir: "results"
+

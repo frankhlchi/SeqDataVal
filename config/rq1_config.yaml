@@ -1,0 +1,19 @@
+experiment:
+  # Paper RQ1 (DP optimality verification)
+  train_count: 20
+  valid_count: 100
+  test_count: 500
+  noise_rate: 0.0
+  device: "cpu"
+
+model:
+  name: "sklogreg"
+
+noise:
+  type: "gaussian"
+  kwargs:
+    noise_rate: 0.0
+
+output:
+  base_dir: "results"
+

@@ -1,0 +1,16 @@
+Method,Task,Seed_42,Seed_1337,Seed_2025,Mean,Std
+random,mmlu,59.8633,59.8989,60.2407,60.0009,0.1702
+random,gsm8k,61.1069,62.4716,62.0925,61.8903,0.5752
+random,bbh,66.1761,66.8790,66.6747,66.5766,0.2953
+rds_plus,mmlu,59.6496,59.5998,59.4858,59.5784,0.0686
+rds_plus,gsm8k,61.2585,62.4716,63.0023,62.2441,0.7298
+rds_plus,bbh,66.6676,67.1067,66.6358,66.8033,0.2149
+bipcov,mmlu,62.0282,61.8929,61.6792,61.8668,0.1437
+bipcov,gsm8k,63.6088,63.9879,63.0023,63.5330,0.4059
+bipcov,bbh,67.0057,66.2016,65.5962,66.2678,0.5773
+
+# Overall averages (mean across tasks for each seed, then mean/std across seeds)
+Method,Metric,Seed_42,Seed_1337,Seed_2025,Mean,Std
+random,Avg(MMLU,GSM8K,BBH),62.3821,63.0832,63.0026,62.8226,0.3132
+rds_plus,Avg(MMLU,GSM8K,BBH),62.5253,63.0593,63.0413,62.8753,0.2476
+bipcov,Avg(MMLU,GSM8K,BBH),64.2142,64.0274,63.4259,63.8892,0.3363
