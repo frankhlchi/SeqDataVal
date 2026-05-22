@@ -1,0 +1,8 @@
+# GPU-friendly deps for embedding + selection
+numpy
+scikit-learn
+torch
+sentence-transformers
+transformers
+datasets
+tqdm

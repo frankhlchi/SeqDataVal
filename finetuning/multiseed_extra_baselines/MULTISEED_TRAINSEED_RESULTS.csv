@@ -1,0 +1,20 @@
+Method,Task,Seed_1337,Seed_2025,Mean,Std
+bm25,mmlu,61.3801,,61.3801,0.0000
+bm25,gsm8k,61.6376,,61.6376,0.0000
+bm25,bbh,66.9494,,66.9494,0.0000
+repsim,mmlu,59.2295,,59.2295,0.0000
+repsim,gsm8k,63.7604,,63.7604,0.0000
+repsim,bbh,65.3409,,65.3409,0.0000
+repsim_v2,mmlu,59.5357,,59.5357,0.0000
+repsim_v2,gsm8k,60.1971,,60.1971,0.0000
+repsim_v2,bbh,66.8542,,66.8542,0.0000
+rds_plus_v2,mmlu,60.0128,,60.0128,0.0000
+rds_plus_v2,gsm8k,62.8506,,62.8506,0.0000
+rds_plus_v2,bbh,,,0.0000,0.0000
+
+# Overall averages (mean across tasks for each seed, then mean/std across seeds)
+Method,Metric,Seed_1337,Seed_2025,Mean,Std
+bm25,Avg(MMLU,GSM8K,BBH),63.3224,,63.3224,0.0000
+repsim,Avg(MMLU,GSM8K,BBH),62.7769,,62.7769,0.0000
+repsim_v2,Avg(MMLU,GSM8K,BBH),62.1957,,62.1957,0.0000
+rds_plus_v2,Avg(MMLU,GSM8K,BBH),61.4317,,61.4317,0.0000

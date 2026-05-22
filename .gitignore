@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.pytest_cache/
+
+# Jupyter / editor / OS
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Environments and local secrets
+.env
+.venv/
+venv/
+env/
+.conda/
+
+# Local data and experiment outputs
+data_files/
+logs/
+results/
+results_rq1_dp/
+results_rq1_dp_smoke/
+utility_appro/data_files/
+utility_appro/logs/
+utility_appro/results/
+utility_appro/aggregate_results/
+
+# DATE-LM / fine-tuning heavyweight outputs
+finetuning/artifacts/
+finetuning/logs*/
+finetuning/results*/
+finetuning/checkpoints*/
+finetuning/data/
+finetuning/DATE-LM*/
+
+# Model / array / data artifacts
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.safetensors
+*.npy
+*.npz
+*.jsonl
+*.parquet
+*.arrow
+
+# Archives and paper snapshots should live in external releases.
+*.tar.gz
+*.zip
+*.pdf
