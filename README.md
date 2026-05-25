@@ -3,10 +3,10 @@
 Reference implementation for **Unifying and Optimizing Data Values for
 Selection via Sequential Decision-Making**.
 
-This repository is intentionally code-first. It contains the algorithms,
-experiment runners, plotting utilities, and reproducibility instructions needed
-to regenerate the paper results. Large raw result trees, checkpoints, logs, and
-paper build artifacts are not tracked in git.
+This repository is intentionally code-first: it contains the algorithms,
+configs, runners, and plotting/comparison scripts needed to reproduce the paper
+experiments. Large result trees, caches, checkpoints, logs, embeddings, data
+archives, and paper build artifacts are kept outside git.
 
 ## Installation
 
@@ -27,21 +27,21 @@ For development:
 pip install -e ".[all]"
 ```
 
+Tested core stack: Python 3.9, OpenDataVal 1.3.0, NumPy 1.25, pandas 1.5,
+scikit-learn 1.2+, PyTorch 2.1.2. Utility approximation additionally needs
+`cvxpy`; DATE-LM fine-tuning additionally needs the GPU dependencies listed in
+`finetuning/requirements-gpu.txt`.
+
 ## Quick Check
 
 ```bash
 bash scripts/smoke_test.sh
-```
-
-Run one OpenML experiment:
-
-```bash
 python src/main.py --dataset 2dplanes --seed 10 --config config/base_config.yaml
 ```
 
-## Main Paper Experiments
+## Paper Experiment Entry Points
 
-### RQ1: Optimal Sequential Selection
+RQ1 exact dynamic-programming gap and detailed RQ1 Figure 6:
 
 ```bash
 python src/main.py --dataset digits --seed 10 --config config/rq1_config.yaml \
@@ -54,25 +54,22 @@ python scripts/plot_rq1_figure6.py \
   --out_dir results/rq1_figure6
 ```
 
-### RQ2: Utility Curvature
+RQ2 curvature:
 
 ```bash
 python scripts/run_rq2_curvature.py
 ```
 
-### RQ3: Selection Curves
+RQ3 selection curves:
 
 ```bash
 bash scripts/run_rq3.sh
 ```
 
-Per-seed outputs are written to
+Per-seed outputs are written under
 `results/<dataset>/seed_<seed>/addition_experiment_results.csv`.
 
-### Budget-500 Table
-
-The paper protocol reports the mean over the top-k selection curve, not only
-the endpoint at `k=500`.
+Budget-500 table:
 
 ```bash
 python scripts/run_budget500_curve_mean_table.py \
@@ -84,9 +81,13 @@ python scripts/compare_budget500_table3.py \
   --summary results/selection_results_500_curve_mean/summary_curve_mean.csv
 ```
 
-Use `--max_workers 1` for `bbc-embeddings` on memory-constrained machines.
+Budget-500 uses `train_count=500`; standard datasets use `valid/test=50/500`,
+while `digits` and `bbc-embeddings` use `valid/test=100/1000`. The reported
+value is the mean over the top-k selection curve, not only the endpoint at
+`k=500`. Use `--max_workers 1` for `bbc-embeddings` on memory-constrained
+machines.
 
-### Utility Approximation
+Utility approximation:
 
 ```bash
 cd utility_appro
@@ -96,10 +97,59 @@ bash run_experiments.sh
 
 ## DATE-LM Fine-Tuning Extension
 
-The `finetuning/` directory contains the BipCov selection code and orchestration
-scripts for DATE-LM-style LLM fine-tuning experiments. Full DATE-LM data,
-selected-data archives, checkpoints, and evaluation logs are external artifacts;
-see `finetuning/README.md` and `EXTERNAL_ARTIFACTS.md`.
+The `finetuning/` directory contains the BipCov selection code and DATE-LM-style
+orchestration scripts. Full DATE-LM data, generated embeddings, selected-data
+archives, LoRA/model checkpoints, and raw evaluation logs are not tracked.
+
+Expected external inputs:
+
+- DATE-LM checkout
+- Tulu3 instruction pool
+- Llama-3.1-8B checkpoint in the format expected by DATE-LM/LitGPT
+- MMLU, GSM8K, and BBH evaluation data
+
+Typical setup on a GPU machine:
+
+```bash
+pip install -r finetuning/requirements-gpu.txt
+export SEQDATAVAL_ROOT=/path/to/SeqDataVal
+export DATELM_ROOT=/path/to/DATE-LM
+
+bash "$SEQDATAVAL_ROOT/finetuning/scripts/datelm_paper/patch_datelm_table3.sh" \
+  "$DATELM_ROOT"
+```
+
+Multi-seed train/eval robustness:
+
+```bash
+python "$SEQDATAVAL_ROOT/finetuning/scripts/datelm_paper/run_multiseed_train_eval_only.py" \
+  --datelm_root "$DATELM_ROOT" \
+  --python python \
+  --seeds 42 1337 2025 \
+  --methods random rds_plus bipcov \
+  --tasks mmlu gsm8k bbh \
+  --mmlu_eval_batch_size 32 \
+  --gsm_eval_batch_size 16 \
+  --bbh_eval_batch_size 16 \
+  --skip_verify \
+  --cleanup_checkpoints
+```
+
+BipCov from precomputed embeddings:
+
+```bash
+python finetuning/bipcov/probe_bipcov_from_emb.py \
+  --train_emb /path/to/train_emb.npy \
+  --ref_emb /path/to/ref_emb.npy \
+  --out /path/to/scores/bipcov_metrics.npy \
+  --k_max 10000
+```
+
+DATE-LM protocol used in the paper: 200k Tulu3 pool, 10k selected examples,
+100 prompt+label reference examples per task, Llama-3.1-8B base model, LoRA
+rank 128 / alpha 512 / dropout 0.1 on q/k/v/o modules, learning rate `2e-5`,
+effective batch size 128, 2 epochs, max sequence length 2048, bf16 precision,
+and train seeds `42`, `1337`, `2025`.
 
 ## Repository Layout
 
@@ -109,34 +159,39 @@ config/                      Paper experiment configurations
 scripts/                     CPU experiment, comparison, and plotting runners
 utility_appro/               Utility approximation experiments
 finetuning/                  DATE-LM/BipCov selection and fine-tuning scripts
-requirements.txt             Python dependency list
+requirements.txt             Python dependencies
 environment.yml              Conda environment
-REPRODUCIBILITY.md           Paper-result to command mapping
-EXTERNAL_ARTIFACTS.md        Policy for large files kept outside git
 ```
 
-## Datasets
+OpenDataVal downloads/preprocesses datasets relative to the working directory.
+For repeated runs, create a persistent repo-root cache:
 
-The OpenML experiments use:
+```bash
+mkdir -p data_files
+```
 
-`2dplanes`, `nomao`, `bbc-embeddings`, `MiniBooNE`, `digits`, `election`,
-`electricity`, and `fried`.
+## Datasets And Methods
 
-The DATE-LM extension uses Tulu3 instruction data, Llama-3.1-8B, and the MMLU,
-GSM8K, and BBH evaluation tasks through the DATE-LM pipeline.
-
-## Methods
+OpenML datasets: `2dplanes`, `nomao`, `bbc-embeddings`, `MiniBooNE`, `digits`,
+`election`, `electricity`, and `fried`.
 
 Core methods:
 
 - `BipartiteMatchingEvaluator`: bipartite graph approximation
 - `DynamicProgrammingEvaluator`: exact optimal sequential selection
 
-Baselines are integrated through OpenDataVal:
+OpenDataVal baselines:
 
 - Random, Leave-One-Out, InfluenceSubsample
 - Data Shapley, Beta Shapley, Data Banzhaf
 - AME, DVRL, Data-OOB
+
+## Large Files
+
+Do not commit generated experiment outputs, OpenML caches, DATE-LM data,
+selected-data archives, embedding arrays, model/checkpoint files, raw logs,
+paper build outputs, credentials, tokens, or machine-specific configuration.
+Distribute heavyweight artifacts separately with manifests and SHA256 checksums.
 
 ## Citation
 
