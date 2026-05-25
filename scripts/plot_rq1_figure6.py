@@ -1,16 +1,11 @@
 #!/usr/bin/env python3
 """Replot NeurIPS Figure 6 (RQ1 upper-bound curves) from raw RQ1 CSVs.
 
-Important provenance correction:
-  - NeurIPS Figure 6 includes `appro_results_small.pdf` in `neurips_2025.tex`.
-  - The older Drive file `hudson/seq/rebutal/plots/upper_bound_results.pdf`
-    is RQ1-like but not the final NeurIPS Figure 6 style.
-
-This script uses the final NeurIPS color/order scheme visible in
-`appro_results_small.pdf`: DynamicProgramming first in dark blue, followed by a
-blue-to-red diverging palette for BetaShap/DataShap/Random/LOO/AME/Influence/
-Banzhaf/DVRL/DataOob. It still reads the current local RQ1 raw CSVs and keeps
-the historical selection-curve transform used by the paper scripts.
+This script uses the final paper color/order scheme:
+DynamicProgramming first in dark blue, followed by a blue-to-red diverging
+palette for BetaShap/DataShap/Random/LOO/AME/Influence/Banzhaf/DVRL/DataOob.
+It reads local RQ1 raw CSVs and keeps the selection-curve transform used by the
+paper scripts.
 
 By default the script writes both a non-BBC validation plot and an all-available
 plot. Pass ``--results_root`` to point at a completed ``results_rq1_dp`` tree.
@@ -378,15 +373,12 @@ def write_manifest(out_dir: Path, rows: list[dict[str, str]], results_root: Path
         writer.writeheader()
         writer.writerows(rows)
 
-    provenance_path = out_dir / "figure6_latest_provenance.txt"
-    provenance_path.write_text(
+    note_path = out_dir / "figure6_latest_note.txt"
+    note_path.write_text(
         "\n".join(
             [
                 "NeurIPS Figure 6 latest local replot",
                 f"results_root={results_root}",
-                "neurips_tex_include=appro_results_small.pdf",
-                "neurips_reference_plot=appro_results_small.pdf",
-                "old_drive_plot=hudson/seq/rebutal/plots/upper_bound_results.pdf (RQ1-like, not final Figure 6 style)",
                 "metric=remove_least_influential_first_Metrics.ACCURACY",
                 "aggregation=mean over available seeds; 95% CI computed but hidden (alpha=0) to match final PDF",
                 "plot_transform=x=[0, axis+1], y=[0, reversed(mean_by_axis)]",

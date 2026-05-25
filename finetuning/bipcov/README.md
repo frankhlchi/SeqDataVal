@@ -9,7 +9,7 @@ This method is intended for **Scheme 1** integration:
 2. Run the selector to produce a DATE-LM-compatible metric file:
 
 ```bash
-python methods/bipcov/probe_bipcov_from_emb.py \
+python finetuning/bipcov/probe_bipcov_from_emb.py \
   --train_emb /path/to/train_emb.npy \
   --ref_emb   /path/to/ref_emb.npy \
   --out       /path/to/scores/mmlu_shots_bipcov.npy \

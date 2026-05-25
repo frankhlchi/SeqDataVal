@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 """Reproduce the paper Budget-500 table under the curve-mean protocol.
 
-This runner differs from `scripts/run_budget500_table.py` in two key places:
+This runner implements two protocol details that are easy to miss:
 
 1. **Per-dataset split sizes**: train=500/valid=50/test=500 for standard
    datasets and train=500/valid=100/test=1000 for digits/bbc-embeddings.
-   (Author memory 2026-05-14; paper Section 7.3 / Appendix RQ3 baseline,
-   re-scaled to budget=500.)
+   following the paper Section 7.3 / Appendix RQ3 baseline protocol,
+   re-scaled to budget=500.
 2. **Curve-mean accuracy** rather than single top-k accuracy. The reported
    accuracy is the mean over k=1..train_count of "model accuracy when
    retrained on the top-k most-valuable points by the method's ranking".
