@@ -3,10 +3,10 @@
 Reference implementation for **Unifying and Optimizing Data Values for
 Selection via Sequential Decision-Making**.
 
-This repository is intentionally code-first: it contains the algorithms,
-configs, runners, and plotting/comparison scripts needed to reproduce the paper
-experiments. Large result trees, caches, checkpoints, logs, embeddings, data
-archives, and paper build artifacts are kept outside git.
+This repository contains the algorithms, configs, runners, and
+plotting/comparison scripts used for the paper experiments. Large datasets,
+model checkpoints, generated embeddings, and full run outputs are distributed
+separately when needed.
 
 ## Installation
 
@@ -98,10 +98,10 @@ bash run_experiments.sh
 ## DATE-LM Fine-Tuning Extension
 
 The `finetuning/` directory contains the BipCov selection code and DATE-LM-style
-orchestration scripts. Full DATE-LM data, generated embeddings, selected-data
-archives, LoRA/model checkpoints, and raw evaluation logs are not tracked.
+orchestration scripts. Running these experiments requires external DATE-LM
+data, model checkpoints, and benchmark files.
 
-Expected external inputs:
+Prepare the following inputs before launching the fine-tuning pipeline:
 
 - DATE-LM checkout
 - Tulu3 instruction pool
@@ -186,12 +186,12 @@ OpenDataVal baselines:
 - Data Shapley, Beta Shapley, Data Banzhaf
 - AME, DVRL, Data-OOB
 
-## Large Files
+## Artifacts
 
-Do not commit generated experiment outputs, OpenML caches, DATE-LM data,
-selected-data archives, embedding arrays, model/checkpoint files, raw logs,
-paper build outputs, credentials, tokens, or machine-specific configuration.
-Distribute heavyweight artifacts separately with manifests and SHA256 checksums.
+This source release is lightweight. Generated OpenML result trees, DATE-LM
+selected-data archives, embedding arrays, checkpoints, raw logs, and paper build
+outputs are handled as external artifacts. For exact-result audits, distribute
+those files separately with a manifest and SHA256 checksums.
 
 ## Citation
 
