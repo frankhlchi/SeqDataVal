@@ -133,7 +133,7 @@ class SentenceTransformerEmbedder(BaseEmbedder):
         self._lazy_load()
         if mode == "query":
             texts = [self.query_prefix + t for t in texts]
-        # sentence-transformers can normalize embeddings internally
+        # sentence-transformers can normalize embeddings during encoding.
         emb = self._model.encode(
             texts,
             batch_size=self.batch_size,

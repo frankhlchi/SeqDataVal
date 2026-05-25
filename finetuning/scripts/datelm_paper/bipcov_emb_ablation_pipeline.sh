@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # DATE-LM Table 3: BipCov embedding ablations (single seed=1337).
-# Intended for multi-GPU machines (e.g., Vast 4×H100).
+# Intended for multi-GPU machines.
 #
 # This script:
 #   1) Ensures embeddings exist for:
