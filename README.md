@@ -196,10 +196,11 @@ Distribute heavyweight artifacts separately with manifests and SHA256 checksums.
 ## Citation
 
 ```bibtex
-@inproceedings{seqdataval2026,
-  title={Unifying and Optimizing Data Values for Selection via Sequential Decision-Making},
-  booktitle={International Conference on Machine Learning},
-  year={2026}
+@article{chi2025unifying,
+  title={Unifying and Optimizing Data Values for Selection via Sequential-Decision-Making},
+  author={Chi, Hongliang and Wu, Qiong and Zhou, Zhengyi and Light, Jonathan and Dodwell, Emily and Ma, Yao},
+  journal={arXiv preprint arXiv:2502.04554},
+  year={2025}
 }
 ```
 
