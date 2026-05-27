@@ -3,10 +3,8 @@
 [![arXiv](https://img.shields.io/badge/arXiv-2502.04554-b31b1b.svg)](https://arxiv.org/abs/2502.04554)
 ![ICML 2026 Spotlight](https://img.shields.io/badge/ICML%202026-Spotlight-blue)
 
-Reference implementation for **Unifying and Optimizing Data Values for
-Selection via Sequential Decision-Making**.
-
-Accepted to **ICML 2026** as a **Spotlight Paper**.
+Official implementation for **Unifying and Optimizing Data Values for
+Selection via Sequential Decision-Making**. Accepted to **ICML 2026** as a **Spotlight Paper**.
 
 This repository contains the algorithms, configs, runners, and
 plotting/comparison scripts used for the paper experiments. Large datasets,
