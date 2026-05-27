@@ -189,13 +189,6 @@ OpenDataVal baselines:
 - Data Shapley, Beta Shapley, Data Banzhaf
 - AME, DVRL, Data-OOB
 
-## Artifacts
-
-This source release is lightweight. Generated OpenML result trees, DATE-LM
-selected-data archives, embedding arrays, checkpoints, raw logs, and paper build
-outputs are handled as external artifacts. For exact-result audits, distribute
-those files separately with a manifest and SHA256 checksums.
-
 ## Citation
 
 ```bibtex
