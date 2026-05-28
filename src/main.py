@@ -27,7 +27,6 @@ PROJECT_ROOT = Path(__file__).parent.parent.absolute()
 def parse_args():
     parser = argparse.ArgumentParser(description='Run data valuation experiments')
     
-    # 数据集参数
     parser.add_argument('--dataset', type=str, default='fried', 
                         help='Dataset name (default: fried)')
     parser.add_argument('--config', type=str, default=None,
@@ -39,7 +38,6 @@ def parse_args():
     parser.add_argument('--test_count', type=int, default=None,
                         help='Number of test samples')
     
-    # 实验参数
     parser.add_argument('--seed', type=int, required=True,
                         help='Random seed')
     parser.add_argument('--device', type=str, default=None,
@@ -53,7 +51,6 @@ def parse_args():
         help="Base output directory (default: results). Use e.g. results_rq1_dp to avoid overwriting RQ3 outputs.",
     )
     
-    # 方法开关（对齐 paper：默认只跑 baselines + Bipartite；RQ1 需要 DP）
     parser.add_argument('--include_dp', action='store_true',
                         help='Include DynamicProgramming (RQ1 optimal baseline)')
     parser.add_argument('--dp_max_subset_size', type=int, default=None,
@@ -63,7 +60,6 @@ def parse_args():
     parser.add_argument('--valuation_budget', type=int, default=1000,
                         help='Number of Monte Carlo/model samples for stochastic data-value evaluators')
 
-    # 噪声参数
     parser.add_argument('--noise_rate', type=float, default=None,
                         help='Noise rate')
     
@@ -83,13 +79,10 @@ if __name__ == "__main__":
     }
     dataset_name = dataset_aliases.get(args.dataset, args.dataset)
     
-    # 选择/加载配置
     if args.config is not None:
         config_path = Path(args.config)
     else:
         config_path = PROJECT_ROOT / "config" / "base_config.yaml"
-        if dataset_name == "cifar10-embeddings":
-            config_path = PROJECT_ROOT / "config" / "cifar_config.yaml"
 
     if not config_path.exists():
         raise FileNotFoundError(
@@ -97,13 +90,11 @@ if __name__ == "__main__":
             "Please make sure the config file exists."
         )
 
-    print('CONFIG_PATH', config_path)
     with open(config_path, 'r') as f:
         config = yaml.safe_load(f)
             
-    print('config train_count', config['experiment']['train_count'])
-    print('args.train_count', args.train_count)
-    # 命令行参数覆盖配置文件
+    print(f"Using config: {config_path}")
+
     train_count = args.train_count or config['experiment']['train_count']
     valid_count = args.valid_count or config['experiment']['valid_count']
     test_count = args.test_count or config['experiment']['test_count']
@@ -117,7 +108,6 @@ if __name__ == "__main__":
     set_seed(args.seed)
     print(f"Running experiment with seed={args.seed} on {device}")
     
-    # 创建实验
     exper_med = ExperimentMediator.model_factory_setup(
         dataset_name=dataset_name,
         model_name=model,
@@ -133,7 +123,6 @@ if __name__ == "__main__":
     
     valuation_budget = max(1, int(args.valuation_budget))
 
-    # Monte Carlo sampler设置
     mc_sampler = MonteCarloSampler(
         mc_epochs=math.ceil(valuation_budget / train_count),
         min_cardinality=1,
@@ -141,7 +130,6 @@ if __name__ == "__main__":
         random_state=args.seed,
     )
     
-    # 评估器列表
     data_evaluators = [
         RandomEvaluator(),
         LeaveOneOut(),
@@ -150,7 +138,7 @@ if __name__ == "__main__":
         BetaShapley(sampler=mc_sampler, cache_name=f"cached_{dataset_name}_seed_{args.seed}"),
         DataBanzhaf(num_models=valuation_budget),
         AME(num_models=math.ceil(valuation_budget / 4)),
-        DVRL(rl_epochs=math.ceil(valuation_budget / 32)),
+        DVRL(rl_epochs=valuation_budget),
         DataOob(num_models=valuation_budget),
     ]
 
@@ -167,12 +155,10 @@ if __name__ == "__main__":
     print(f"Computing data values for seed {args.seed}...")
     exper_med = exper_med.compute_data_values(data_evaluators)
     
-    # 设置简化的输出目录结构
     output_dir = Path(args.results_root) / dataset_name / f"seed_{args.seed}"
     create_output_dir(output_dir)
     exper_med.set_output_directory(output_dir)
     
-    # 使用remove_points_one_by_one评估并保存结果
     print("Running removal experiment...")
     df_removal, _ = exper_med.plot(remove_points_one_by_one)
     df_removal['axis'] = (df_removal['axis'] * train_count).astype(int)

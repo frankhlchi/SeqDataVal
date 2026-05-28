@@ -10,8 +10,7 @@ This runner implements two protocol details that are easy to miss:
 2. **Curve-mean accuracy** rather than single top-k accuracy. The reported
    accuracy is the mean over k=1..train_count of "model accuracy when
    retrained on the top-k most-valuable points by the method's ranking".
-   This matches `exper_med.plot(remove_points_one_by_one)` in the old
-   `main_large.py`.
+   This matches the paper selection-curve aggregation protocol.
 
 Outputs:
   <out_dir>/raw.csv:       per (dataset, seed, method) row with curve-mean,
@@ -98,9 +97,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--dvrl_rl_epochs", type=int, default=1000,
                    help="DVRL rl_epochs (default 1000 = OpenDataVal default; gives "
                         "1003 pred_model.fit() calls = 2 baseline + 1000 RL-loop + 1 "
-                        "final, aligned with other methods' 1000-retraining budget). "
-                        "Use 32 to reproduce the older historical paper setting "
-                        "(ceil(1000/32)=32) which only performs 35 fits.")
+                        "final, aligned with other methods' 1000-retraining budget).")
     p.add_argument("--ame_models", type=int, default=None,
                    help="Override AME num_models (default ceil(num_models/4)=250).")
     p.add_argument("--methods", nargs="*", default=None)

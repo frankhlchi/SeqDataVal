@@ -86,8 +86,6 @@ NEURIPS_METHOD_COLORS = {
 
 EXCLUDED_METHODS = {
     "BipartiteMatchingEvaluator",
-    "PredictionBasedMatchingEvaluator",
-    "DualThresholdTripartiteEvaluator",
     "KNNShapley",
 }
 
