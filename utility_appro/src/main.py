@@ -277,14 +277,14 @@ class MLPRegressorEvaluator(BaseDataEvaluator):
         
         for lr in learning_rates:
             for mi in max_iters:
-                for a in alphas:  # 添加alpha搜索循环
+                for a in alphas:
                     print(f"Testing learning_rate={lr}, max_iter={mi}, alpha={a}")
                     
                     mlp_model = MLPRegressor(
                         hidden_layer_sizes=self.hidden_layer_sizes,
                         activation=self.activation,
                         solver=self.solver,
-                        alpha=a,  # 使用搜索的alpha值
+                        alpha=a,
                         learning_rate=lr,
                         max_iter=mi,
                         random_state=self.random_state
@@ -313,7 +313,7 @@ class MLPRegressorEvaluator(BaseDataEvaluator):
                 hidden_layer_sizes=self.hidden_layer_sizes,
                 activation=self.activation,
                 solver=self.solver,
-                alpha=best_params['alpha'],  # 使用最佳alpha
+                alpha=best_params['alpha'],
                 learning_rate=best_params['learning_rate'],
                 max_iter=best_params['max_iter'],
                 random_state=self.random_state
@@ -863,7 +863,7 @@ def compute_bipartite_utility(bipartite_evaluator, subset_indices):
     # Get subset valid edges
     subset_valid_edges = bipartite_evaluator.valid_edges[subset_indices]
     
-    # Calculate coverage - 对于每个验证节点，检查是否至少有一个训练节点与其连接
+    # Calculate coverage by checking whether each validation node is covered.
     covered_valid_nodes = subset_valid_edges.any(axis=0)
     coverage_rate = covered_valid_nodes.mean()
     

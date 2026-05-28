@@ -14,7 +14,7 @@ from opendataval.model import Model
 from opendataval.util import get_name
 
 def evaluate_model(model, x_test, y_test):
-    """评估scikit-learn模型的性能"""
+    """Evaluate a scikit-learn model."""
     x_test, y_test = process_data_for_sklearn(x_test, y_test)
     
     y_pred = model.predict_proba(x_test)
@@ -25,7 +25,7 @@ def evaluate_model(model, x_test, y_test):
     return accuracy
 
 def set_seed(seed=42):
-    """设置随机种子确保实验可重复性"""
+    """Set random seeds for reproducibility."""
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
     np.random.seed(seed)
@@ -35,28 +35,24 @@ def set_seed(seed=42):
 
 
 def create_output_dir(path):
-    """创建输出目录"""
+    """Create an output directory if needed."""
     os.makedirs(path, exist_ok=True)
 
 def process_data_for_sklearn(x, y):
-    """处理数据为sklearn模型可用的格式"""
-    # 处理特征
+    """Convert tensors/datasets to formats accepted by scikit-learn."""
     if isinstance(x, torch.Tensor):
         x = x.cpu().numpy()
     if isinstance(x, Dataset):
         x = np.array(x)
         
-    # 处理标签  
     if isinstance(y, torch.Tensor):
         y = y.cpu().numpy()
     if isinstance(y, Dataset):
         y = np.array(y)
         
-    # 如果标签是一维数组，直接返回
     if len(y.shape) == 1:
         return x, y
         
-    # 如果是独热编码且维度大于1，转换为类别索引
     if len(y.shape) > 1 and y.shape[1] > 1:
         y = np.argmax(y, axis=1)
     elif len(y.shape) > 1 and y.shape[1] == 1:
@@ -65,7 +61,7 @@ def process_data_for_sklearn(x, y):
     return x, y
 
 def train_model_on_subset(model, x, y, train_kwargs, device=None):
-    """在数据子集上训练scikit-learn模型"""
+    """Train a scikit-learn model on a data subset."""
     x, y = process_data_for_sklearn(x, y)
     
     if 'sample_weight' in train_kwargs:
@@ -85,7 +81,7 @@ def remove_points_one_by_one(
     metric: Metrics = Metrics.ACCURACY,
     train_kwargs: Optional[dict[str, Any]] = None
 ) -> dict[str, list[float]]:
-    """一个个点移除并评估性能"""
+    """Evaluate performance while removing points one by one."""
     
     if isinstance(fetcher, DataFetcher):
         x_train, y_train, *_, x_test, y_test = fetcher.datapoints
@@ -107,7 +103,6 @@ def remove_points_one_by_one(
         if i % 100 == 0:
             print(f"Processing point {i}/{num_points}")
             
-        # 移除最有价值的点
         most_valuable_indices = sorted_value_list[i:]
         valuable_model = curr_model.clone()
         valuable_model.fit(
@@ -119,7 +114,6 @@ def remove_points_one_by_one(
         valuable_score = metric(y_test, y_hat_valid)
         valuable_list.append(valuable_score)
 
-        # 移除最无价值的点  
         least_valuable_indices = sorted_value_list[:(num_points-i)]
         unvaluable_model = curr_model.clone()
         unvaluable_model.fit(
@@ -146,4 +140,3 @@ def remove_points_one_by_one(
         f"remove_most_influential_first_{get_name(metric)}": unvaluable_list,
         "axis": x_axis,
     }
-

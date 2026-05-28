@@ -13,6 +13,9 @@ separately when needed.
 
 ## Installation
 
+Use Python 3.9 for the OpenDataVal experiments. The paper code was tested with
+OpenDataVal 1.3.0, which is not compatible with Python 3.12.
+
 ```bash
 pip install -r requirements.txt
 ```
@@ -71,6 +74,9 @@ bash scripts/run_rq3.sh
 
 Per-seed outputs are written under
 `results/<dataset>/seed_<seed>/addition_experiment_results.csv`.
+The full RQ3 script runs 8 datasets x 20 seeds and is CPU-heavy; use
+`scripts/smoke_test.sh` first, or edit the `datasets`/`seeds` arrays in
+`scripts/run_rq3.sh` for a short verification run.
 
 Budget-500 table:
 

@@ -4,7 +4,7 @@ experiment:
   valid_count: 50
   test_count: 500
   noise_rate: 0.0
-  seeds: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]  # 示例 seeds（脚本里会覆盖）
+  seeds: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]  # example seeds (overridden by scripts)
   device: "cpu"
   
 model:
