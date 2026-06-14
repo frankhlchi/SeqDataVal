@@ -7,11 +7,7 @@ Official implementation for **Unifying and Optimizing Data Values for
 Selection via Sequential Decision-Making**. Accepted to **ICML 2026** as a **Spotlight Paper**.
 
 <p align="center">
-  <a href="assets/seqdataval_icml2026_spotlight_poster.pdf">
-    <img src="assets/seqdataval_icml2026_spotlight_poster.png" alt="ICML 2026 Spotlight poster for SeqDataVal" width="900">
-  </a>
-  <br>
-  <a href="assets/seqdataval_icml2026_spotlight_poster.pdf">ICML 2026 Spotlight poster (PDF)</a>
+  <img src="assets/seqdataval_icml2026_spotlight_poster.png" alt="ICML 2026 Spotlight poster for SeqDataVal" width="900">
 </p>
 
 This repository contains the algorithms, configs, runners, and
